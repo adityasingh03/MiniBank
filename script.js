@@ -98,7 +98,7 @@ const f1 = function (acc) {
 
     const html = `<div class="movements__row">
   <div class="movements__type movements__type--${w}">${j + 1} ${w}</div>
-  <div class="movements__date">Just Now</div>
+  <div class="movements__date"></div>
   <div class="movements__value">${Math.abs(Number(i))}€</div>
 </div>`;
     containerMovements.insertAdjacentHTML('afterbegin', html);
@@ -155,6 +155,30 @@ const f5 = function (from) {
     accounts.splice(ind, 1);
     containerApp.style.opacity = '0';
   }
+  inputClosePin.value = '';
+  inputCloseUsername.value = '';
+  inputClosePin.blur();
+};
+
+const f6 = function () {
+  let m = 4;
+  let s = 59;
+  const time = setInterval(function () {
+    s--;
+    if (s === -1) {
+      s = 59;
+      m--;
+    }
+    if (m === 0 && s === 0) {
+      clearInterval(time);
+      labelWelcome.textContent = `Session TimeOut.`;
+      containerApp.style.opacity = '0';
+    }
+    labelTimer.textContent = `${String(m).padStart(2, 0)}.${String(s).padStart(
+      2,
+      0
+    )}`;
+  }, 200);
 };
 
 //callbacks and events
@@ -172,6 +196,10 @@ btnLogin.addEventListener('click', function (e) {
     labelWelcome.textContent = `Welcome back,${accountr.owner}`;
     f1(accountr.movements);
   }
+  inputLoginPin.value = '';
+  inputLoginUsername.value = '';
+  inputLoginPin.blur();
+  f6();
 });
 
 btnTransfer.addEventListener('click', function (e) {
@@ -191,4 +219,7 @@ btnClose.addEventListener('click', function (e) {
   console.log(accountr);
   f5(accountr);
 });
-//transfer
+
+console.log(
+  Array.from({ length: 100 }, (_, i) => Math.trunc(Math.random() * 6) + 1)
+);
