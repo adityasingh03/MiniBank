@@ -86,13 +86,11 @@ const acc2 = acc.map(function (value, index) {
   acc[index].username = str;
 });
 
-const f2 = function (x) {
-  account1.movements.push(x);
-};
 /////////////////////////////////////////////////
 
 //functions
 
+//list of withdrawal and deposits
 const f1 = function (acc) {
   containerMovements.innerHTML = '';
   acc.forEach(function (i, j) {
@@ -113,34 +111,82 @@ const f1 = function (acc) {
       acc.filter(value => value < 0).reduce((acc, val) => acc + val, 0)
     ) + `€`;
   labelSumInterest.textContent =
-    Math.abs(
-      acc
-        .filter(value => value > 0)
-        .map(value => (value * 1.2) / 100)
-        .reduce((acc, val) => acc + val, 0)
-    ) + `€`;
+    acc
+      .filter(value => value > 0)
+      .map(value => {
+        let x3 = Number((value * 1.2) / 100).toFixed(2);
+        return Number(x3);
+      })
+      .reduce((acc, val) => acc + val, 0)
+      .toFixed(2) + `€`;
+};
+const f2 = function (acc) {
+  acc.movements.reduce((ac, val) => {
+    return val + ac;
+  }, 0);
+};
+const f3 = function (from) {
+  let cur = from.movements.reduce((acc, val) => acc + val);
+  const accountr = accounts.find(function (val) {
+    if (val.username === inputTransferTo.value) return val;
+  });
+  let x = inputTransferAmount.value;
+  if (cur - inputTransferAmount.value >= 0) {
+    if (accountr) {
+      accountr.movements.push(x * 1);
+      from.movements.push(x * -1);
+    }
+  } else alert('Transfer money is more than Current Money');
+  inputTransferAmount.value = '';
+  inputTransferTo.value = '';
 };
 
+const f4 = function (from) {
+  if (inputLoanAmount.value > 0) from.movements.push(inputLoanAmount.value * 1);
+  inputLoanAmount.value = '';
+};
+
+const f5 = function (from) {
+  if (
+    inputCloseUsername.value === from.username &&
+    Number(inputClosePin.value) === from.pin
+  ) {
+    let ind = accounts.findIndex(val => val === from);
+    accounts.splice(ind, 1);
+    containerApp.style.opacity = '0';
+  }
+};
+
+//callbacks and events
+//login
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
-  const accountr = accounts.find(function (acc) {
+  let accountr = '';
+  accountr = accounts.find(function (acc) {
     return acc.username === inputLoginUsername.value;
-    console.log(1);
   });
-  console.log(accountr);
   if (accountr?.pin === Number(inputLoginPin.value)) {
     containerApp.style.opacity = '1';
     labelWelcome.textContent = `Welcome back,${accountr.owner}`;
     f1(accountr.movements);
   }
+  btnTransfer.addEventListener('click', function (e) {
+    e.preventDefault();
+    f3(accountr);
+    console.log(accountr);
+    f1(accountr.movements);
+  });
+  btnLoan.addEventListener('click', function (e) {
+    e.preventDefault();
+    f4(accountr);
+    console.log(accountr);
+    f1(accountr.movements);
+  });
+  btnClose.addEventListener('click', function (e) {
+    e.preventDefault();
+    console.log(accountr);
+    f5(accountr);
+  });
 });
 
-/*
-const f3 = function (acc, x) {
-  return acc.filter(value => value * x > 0).reduce((acc, val) => acc + val, 0);
-};
-const f4 = function (acc) {
-  return acc.reduce((acc, val) => acc + val, 0);
-};
-*/
-//callback
+//transfer
