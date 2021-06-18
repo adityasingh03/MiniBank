@@ -159,34 +159,36 @@ const f5 = function (from) {
 
 //callbacks and events
 //login
+let accountr;
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
-  let accountr = '';
+
   accountr = accounts.find(function (acc) {
     return acc.username === inputLoginUsername.value;
   });
+
   if (accountr?.pin === Number(inputLoginPin.value)) {
     containerApp.style.opacity = '1';
     labelWelcome.textContent = `Welcome back,${accountr.owner}`;
     f1(accountr.movements);
   }
-  btnTransfer.addEventListener('click', function (e) {
-    e.preventDefault();
-    f3(accountr);
-    console.log(accountr);
-    f1(accountr.movements);
-  });
-  btnLoan.addEventListener('click', function (e) {
-    e.preventDefault();
-    f4(accountr);
-    console.log(accountr);
-    f1(accountr.movements);
-  });
-  btnClose.addEventListener('click', function (e) {
-    e.preventDefault();
-    console.log(accountr);
-    f5(accountr);
-  });
 });
 
+btnTransfer.addEventListener('click', function (e) {
+  e.preventDefault();
+  f3(accountr);
+  console.log(accountr);
+  f1(accountr.movements);
+});
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+  f4(accountr);
+  console.log(accountr);
+  f1(accountr.movements);
+});
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+  console.log(accountr);
+  f5(accountr);
+});
 //transfer
